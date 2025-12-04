@@ -6,7 +6,7 @@ const multer = require('multer');
 const cookieParser = require('cookie-parser'); // MUST BE REQUIRED
 
 const app = express();
-const PORT = 3001; // Using 3001 to prevent conflict
+const PORT = process.env.PORT || 3001; // Use the hosting port, or 3001 locally
 
 // === SECURITY CONFIG ===
 const ADMIN_PASSWORD = "admin"; 
