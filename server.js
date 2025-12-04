@@ -3,10 +3,10 @@ const path = require('path');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const multer = require('multer');
-const cookieParser = require('cookie-parser'); // MUST BE REQUIRED
+const cookieParser = require('cookie-parser'); 
 
 const app = express();
-const PORT = process.env.PORT || 3001; // Use the hosting port, or 3001 locally
+const PORT = process.env.PORT || 3001; 
 
 // === SECURITY CONFIG ===
 const ADMIN_PASSWORD = "admin"; 
@@ -33,21 +33,16 @@ async function initDB() {
 }
 initDB();
 
-// ===============================================
-// 1. CRITICAL MIDDLEWARE (MUST BE AT THE TOP)
-// ===============================================
-// Enables cookie reading BEFORE any route attempts to access them
+
 app.use(cookieParser()); 
-// Enables body parsing (reading JSON from requests)
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// ===============================================
-// 2. PROTECTED ROUTE (MUST BE DEFINED AFTER COOKIEPARSER)
-// ===============================================
+
 app.get('/admin.html', (req, res) => {
-  // This check now works because cookieParser has initialized req.cookies
+  
   if (req.cookies.admin_token === ADMIN_PASSWORD) {
     res.sendFile(path.join(__dirname, 'private', 'admin.html'));
   } else {
@@ -55,10 +50,7 @@ app.get('/admin.html', (req, res) => {
   }
 });
 
-// ===============================================
-// 3. STATIC FILE SERVING (MUST BE DEFINED AFTER PROTECTED ROUTE)
-// ===============================================
-// If Express didn't hit /admin.html, it checks the public folder.
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 
