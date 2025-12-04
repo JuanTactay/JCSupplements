@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | JCSupplements</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      background: #111;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 20px 0;
+      background: #222;
+      border: 1px solid #333;
+      color: white;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #e63946;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    button:hover { background: #ff4757; }
+    .error { color: #e63946; margin-top: 10px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="login-container fade-in">
+    <h1>🔒 Admin Access</h1>
+    <p>Please enter the password.</p>
+    
+    <form id="login-form">
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    
+    <p id="error-msg" class="error">❌ Incorrect Password</p>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -6,10 +6,12 @@ const { open } = require('sqlite');
 const app = express();
 const PORT = 3000;
 
+// === SECURITY CONFIG ===
+const ADMIN_PASSWORD = "admin"; // <--- CHANGE THIS IF YOU WANT
+
 // === DATABASE CONNECTION ===
 let db;
 
-// Open the database connection when server starts
 async function initDB() {
   db = await open({
     filename: './database.db',
@@ -17,8 +19,6 @@ async function initDB() {
   });
   console.log('✅ Connected to SQLite database');
 }
-
-// Initialize DB immediately
 initDB();
 
 // === MIDDLEWARE ===
@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // === API ROUTES ===
 
-// GET: Fetch all products from Database
+// GET: Fetch all products
 app.get('/api/products', async (req, res) => {
   try {
     const products = await db.all('SELECT * FROM products');
@@ -38,40 +38,38 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// GET: Fetch a SINGLE product by ID from Database
+// GET: Fetch Single Product
 app.get('/api/products/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    // The '?' is a security feature (prevents SQL Injection)
     const product = await db.get('SELECT * FROM products WHERE id = ?', id);
-
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ message: "Product not found" });
-    }
+    if (product) res.json(product);
+    else res.status(404).json({ message: "Product not found" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// POST: Add a NEW product to the Database
+// POST: Add a NEW product (SECURED)
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, price, img, description } = req.body;
+    // 1. SECURITY CHECK
+    const providedPassword = req.headers['x-api-key'];
+    if (providedPassword !== ADMIN_PASSWORD) {
+      return res.status(403).json({ error: "⛔ Access Denied: Wrong Password" });
+    }
 
-    // Validation: Ensure all fields are provided
+    // 2. Data Logic
+    const { name, price, img, description } = req.body;
     if (!name || !price || !img || !description) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Insert into SQLite
     const result = await db.run(
       'INSERT INTO products (name, price, img, description) VALUES (?, ?, ?, ?)',
       [name, price, img, description]
     );
 
-    // Send back the ID of the new row
     res.json({ 
       success: true, 
       id: result.lastID, 
@@ -83,7 +81,7 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// POST: Handle Contact Form Submission
+// POST: Handle Contact Form
 app.post('/api/contact', (req, res) => {
   const { name, email, message } = req.body;
   console.log(`📩 Contact: ${name} (${email}) says: ${message}`);
@@ -98,4 +96,15 @@ app.get('/', (req, res) => {
 // === START SERVER ===
 app.listen(PORT, () => {
     console.log(`✅ Server is running locally at http://localhost:${PORT}`);
+});
+
+// POST: Login Verification
+app.post('/api/login', (req, res) => {
+  const { password } = req.body;
+  
+  if (password === ADMIN_PASSWORD) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, message: "Wrong password" });
+  }
 });
