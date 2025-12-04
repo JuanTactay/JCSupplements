@@ -37,7 +37,7 @@ function renderProducts() {
         <h3>${prod.name}</h3>
       </a>
       
-      <p>$${prod.price.toFixed(2)}</p>
+      <p>₱${prod.price.toFixed(2)}</p>
       <button onclick="addToCart(${prod.id})">Add to Cart</button>
     `;
     container.appendChild(div);

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <img src="${product.img}" alt="${product.name}" class="detail-img">
         <div class="detail-info">
           <h1>${product.name}</h1>
-          <h2 class="price">$${product.price.toFixed(2)}</h2>
+          <h2 class="price">₱${product.price.toFixed(2)}</h2>
           
           <p class="description">${product.description}</p>
           
