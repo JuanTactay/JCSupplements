@@ -1,0 +1,8 @@
+# Dependencies
+/node_modules
+
+# Database
+database.db
+
+# Logs
+*.log

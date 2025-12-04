@@ -223,24 +223,23 @@
 
     <script src="js/admin.js"></script>
     <script>
-      function logout() {
-        localStorage.removeItem("adminKey");
-        window.location.href = "login.html";
-      }
-
-      function switchTab(tabName) {
-        // Hide all sections
-        document
-          .querySelectorAll(".tab-section")
-          .forEach((el) => el.classList.remove("active"));
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((el) => el.classList.remove("active"));
-
-        // Show selected
-        document.getElementById("section-" + tabName).classList.add("active");
-        event.target.classList.add("active");
-      }
-    </script>
+    async function logout() {
+      // 1. Tell server to delete cookie
+      await fetch('/api/logout', { method: 'POST' });
+      
+      // 2. Clear local key
+      localStorage.removeItem("adminKey");
+      
+      // 3. Go to login
+      window.location.href = "login.html";
+    }
+    
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('section-' + tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
   </body>
 </html>
