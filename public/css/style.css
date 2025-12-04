@@ -15,7 +15,7 @@ body {
 }
 
 /* =============================
-   HEADER / NAVBAR
+   HEADER / NAVBAR (Nested Structure)
 ============================= */
 header {
   background: #111;
@@ -29,13 +29,54 @@ header {
   justify-content: space-around;
   flex-wrap: wrap;
 }
-
-.logo {
+header .logo {
   font-size: 1.8rem;
   font-weight: 700;
   color: #e63946;
   letter-spacing: 1px;
   animation: glow 2s ease-in-out infinite alternate;
+}
+header nav {
+  display: flex;
+  gap: 30px;
+}
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+header nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: #e63946;
+  transition: width 0.3s ease;
+}
+header nav a:hover {
+  color: #e63946;
+}
+header nav a:hover::after {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 15px 0;
+  }
+  header .logo {
+    margin-bottom: 15px;
+  }
+  header nav {
+    gap: 15px;
+  }
+  header nav a {
+    font-size: 0.95rem;
+  }
 }
 
 @keyframes glow {
@@ -46,39 +87,6 @@ header {
     text-shadow: 0 0 20px #ff4757, 0 0 40px #ff4757;
   }
 }
-
-nav {
-  display: flex;
-  gap: 30px;
-}
-
-nav a {
-  color: #f1f1f1;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-nav a::after {
-  content: "";
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  bottom: -5px;
-  left: 0;
-  background: #e63946;
-  transition: width 0.3s ease;
-}
-
-nav a:hover {
-  color: #e63946;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
 /* =============================
    HERO SECTION
 ============================= */
@@ -89,25 +97,22 @@ nav a:hover::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
   text-align: center;
   overflow: hidden;
-  background-color: black; /* Fallback color */
+  background-color: #0b0b0b;
 }
-
-.hero-content {
+.hero .hero-content {
   position: relative;
   z-index: 2;
   animation: fadeInUp 1.5s ease;
 }
-
 .hero h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
   letter-spacing: 2px;
-  text-shadow: 0 0 20px rgba(230, 57, 70, 0.6);
+  text-shadow: 0 0 20px rgba(230, 57, 70, 0.8);
 }
-
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
@@ -116,18 +121,16 @@ nav a:hover::after {
   margin-left: auto;
   margin-right: auto;
 }
-
-.btn {
+.hero .btn {
   background: #e63946;
   padding: 12px 28px;
   border-radius: 30px;
-  color: white;
+  color: #fff;
   font-weight: bold;
   text-decoration: none;
   transition: background 0.3s, transform 0.2s;
 }
-
-.btn:hover {
+.hero .btn:hover {
   background: #ff4757;
   transform: scale(1.05);
 }
@@ -142,16 +145,15 @@ nav a:hover::after {
     transform: translateY(0);
   }
 }
-
-/* Background video setup */
 .background-video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  z-index: 0; /* Behind content */
+  -o-object-fit: cover;
+     object-fit: cover;
+  z-index: 0;
   filter: brightness(0.4);
 }
 
@@ -173,39 +175,35 @@ nav a:hover::after {
   text-align: center;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
 }
-
 .product:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
 }
-
-.product-img {
+.product .product-img {
   width: 220px;
   height: 220px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 12px;
   margin-bottom: 10px;
   transition: transform 0.3s ease;
 }
-
 .product:hover .product-img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
-
 .product h3 {
   color: #fff;
   font-size: 1.2rem;
   margin: 10px 0;
 }
-
 .product p {
-  color: #bbb;
+  color: #ccc;
   font-size: 1rem;
+  margin-bottom: 15px;
 }
-
 .product button {
   background: #e63946;
   color: #fff;
@@ -216,7 +214,6 @@ nav a:hover::after {
   font-weight: bold;
   transition: background 0.3s ease, transform 0.2s ease;
 }
-
 .product button:hover {
   background: #ff4757;
   transform: scale(1.05);
@@ -258,7 +255,6 @@ nav a:hover::after {
     opacity: 1;
   }
 }
-
 /* =============================
    ABOUT / CONTACT / OTHER SECTIONS
 ============================= */
@@ -268,23 +264,19 @@ nav a:hover::after {
   padding: 20px;
   text-align: center;
 }
-
 .section h1 {
   color: #fff;
   margin-bottom: 15px;
 }
-
 .section p {
   color: #ccc;
 }
-
 .section img {
   max-width: 100%;
   border-radius: 12px;
   margin-top: 20px;
   transition: transform 0.3s ease;
 }
-
 .section img:hover {
   transform: scale(1.03);
 }
@@ -298,7 +290,6 @@ form {
   gap: 15px;
   margin-top: 20px;
 }
-
 form input,
 form textarea {
   background: #111;
@@ -307,17 +298,15 @@ form textarea {
   padding: 12px;
   color: #fff;
 }
-
 form button {
   background: #e63946;
   border: none;
-  color: white;
+  color: #fff;
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
 }
-
 form button:hover {
   background: #ff4757;
   transform: scale(1.05);
@@ -335,36 +324,31 @@ form button:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   text-align: left;
 }
-
 #cart-container ul {
   list-style: none;
   padding: 0;
 }
-
 #cart-container li {
   margin: 12px 0;
   border-bottom: 1px solid #222;
   padding-bottom: 8px;
   color: #ccc;
 }
-
 #cart-container p strong {
   color: #fff;
   font-size: 1.2rem;
 }
-
 #cart-container button {
   margin-top: 20px;
   background: #e63946;
   border: none;
-  color: white;
+  color: #fff;
   padding: 12px 18px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: background 0.3s, transform 0.2s;
 }
-
 #cart-container button:hover {
   background: #ff4757;
   transform: scale(1.05);
@@ -375,7 +359,7 @@ form button:hover {
 ============================= */
 footer {
   background: #111;
-  color: #aaa;
+  color: #ccc;
   text-align: center;
   padding: 20px 0;
   margin-top: 40px;
@@ -395,34 +379,29 @@ footer {
   max-width: 900px;
   margin: 0 auto;
 }
-
-.detail-img {
+.product-detail-view .detail-img {
   width: 100%;
   max-width: 400px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
-
-.detail-info {
+.product-detail-view .detail-info {
   flex: 1;
   min-width: 300px;
 }
-
-.detail-info h1 {
+.product-detail-view .detail-info h1 {
   font-size: 2.5rem;
   color: #fff;
   margin-bottom: 10px;
 }
-
-.detail-info .price {
+.product-detail-view .detail-info .price {
   color: #e63946;
   font-size: 1.8rem;
   margin-bottom: 20px;
 }
-
-.btn-large {
+.product-detail-view .detail-info .btn-large {
   background: #e63946;
-  color: white;
+  color: #fff;
   border: none;
   padding: 15px 30px;
   font-size: 1.1rem;
@@ -431,40 +410,36 @@ footer {
   margin-top: 20px;
   transition: transform 0.2s;
 }
-
-.btn-large:hover {
+.product-detail-view .detail-info .btn-large:hover {
   background: #ff4757;
   transform: scale(1.05);
 }
-
-.back-link {
+.product-detail-view .detail-info .back-link {
   display: inline-block;
   margin-top: 20px;
   color: #ccc;
   text-decoration: none;
 }
-
-.back-link:hover {
-  color: white;
+.product-detail-view .detail-info .back-link:hover {
+  color: #fff;
 }
 
 /* =============================
    CHECKOUT MODAL
 ============================= */
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   z-index: 2000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   justify-content: center;
   align-items: center;
 }
-
-.modal-content {
+.modal .modal-content {
   background-color: #1a1a1a;
   padding: 30px;
   border-radius: 12px;
@@ -474,17 +449,75 @@ footer {
   box-shadow: 0 4px 20px rgba(230, 57, 70, 0.4);
   animation: fadeIn 0.3s;
 }
-
-.close-btn {
+.modal .close-btn {
   position: absolute;
   top: 15px;
   right: 20px;
-  color: #aaa;
+  color: #ccc;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
 }
+.modal .close-btn:hover {
+  color: #fff;
+}
+.modal h2 {
+  margin-bottom: 20px;
+  color: #e63946;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
 
-.close-btn:hover { color: #fff; }
-
-.modal h2 { margin-bottom: 20px; color: #e63946; border-bottom: 1px solid #333; padding-bottom: 10px; }
+/* =============================
+   ADMIN PANEL STYLES
+============================= */
+.admin-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #111;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  /* List Container Styles */
+}
+.admin-container h1, .admin-container h2 {
+  color: #e63946;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.admin-container .form-group input,
+.admin-container .form-group textarea {
+  background: #222;
+  border: 1px solid #333;
+}
+.admin-container .btn-admin {
+  background: #e63946;
+}
+.admin-container .btn-admin:hover {
+  background: #ff4757;
+}
+.admin-container .list-item {
+  background: #1a1a1a;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border-left: 4px solid #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.admin-container .list-item.order {
+  border-left-color: #06d6a0;
+}
+.admin-container .list-item.msg {
+  border-left-color: #e63946;
+}
+.admin-container .list-item .btn-delete {
+  background: #b91c1c;
+}
+.admin-container .list-item .btn-delete:hover {
+  background: #dc2626;
+}
+.admin-container .list-item .btn-edit {
+  background: #f39c12;
+}/*# sourceMappingURL=style.css.map */

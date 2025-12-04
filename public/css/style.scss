@@ -1,0 +1,596 @@
+// =============================
+// COLOR PALETTE VARIABLES
+// =============================
+$color-primary: #e63946;    // Main accent color (CTA, Logo Glow, Highlight)
+$color-secondary: #ff4757;  // Used for hover states
+$color-background-dark: #0b0b0b; // Main page background
+$color-background-mid: #111;    // Header, Card Background
+$color-background-light: #222;   // Form input fields, Borders
+$color-text-main: #fff;       // Main white text
+$color-text-sub: #ccc;        // Secondary gray text
+$color-success: #06d6a0;      // Success messages (Green)
+$color-error: #b91c1c;        // Delete button / Error messages (Red)
+$color-warning: #f39c12;      // Edit button / Warning messages
+
+/* =============================
+   GLOBAL STYLES
+============================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: $color-background-dark;
+  color: $color-text-main;
+  line-height: 1.6;
+}
+
+/* =============================
+   HEADER / NAVBAR (Nested Structure)
+============================= */
+header {
+  background: $color-background-mid;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap; 
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $color-primary;
+    letter-spacing: 1px;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  nav {
+    display: flex;
+    gap: 30px;
+
+    a {
+      color: $color-text-main;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: $color-primary;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: $color-primary;
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 15px 0;
+
+    .logo {
+      margin-bottom: 15px;
+    }
+
+    nav {
+      gap: 15px;
+      a {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px $color-primary, 0 0 20px $color-primary;
+  }
+  to {
+    text-shadow: 0 0 20px $color-secondary, 0 0 40px $color-secondary;
+  }
+}
+
+
+/* =============================
+   HERO SECTION
+============================= */
+.hero {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-main;
+  text-align: center;
+  overflow: hidden;
+  background-color: $color-background-dark; 
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 1.5s ease;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    // Added a more visible text shadow using the accent color
+    text-shadow: 0 0 20px rgba($color-primary, 0.8); 
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: $color-text-sub;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  // Button (CTA)
+  .btn {
+    background: $color-primary;
+    padding: 12px 28px;
+    border-radius: 30px;
+    color: $color-text-main;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+
+    &:hover {
+      background: $color-secondary;
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Animation for content entering
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Background video setup
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; 
+  filter: brightness(0.4); // Darken the video for better text contrast
+}
+
+/* =============================
+   SHOP PAGE
+============================= */
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.product {
+  background: $color-background-mid;
+  border-radius: 16px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease; // Smoother transition
+  position: relative;
+
+  &:hover {
+    // Lift effect
+    transform: translateY(-8px); // Increased lift for better visual
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  }
+
+  // Image Styles
+  .product-img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  // Apply image scale on parent hover
+  &:hover .product-img {
+    transform: scale(1.04); 
+  }
+
+  h3 {
+    color: $color-text-main;
+    font-size: 1.2rem;
+    margin: 10px 0;
+  }
+
+  p {
+    color: $color-text-sub;
+    font-size: 1rem;
+    margin-bottom: 15px; // Add spacing before button
+  }
+
+  // Button Styles
+  button {
+    background: $color-primary;
+    color: $color-text-main;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background: $color-secondary;
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* =============================
+   POPUP ANIMATION
+============================= */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: rgba($color-background-mid, 0.95);
+  color: $color-text-main;
+  padding: 18px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* =============================
+   FADE-IN EFFECT
+============================= */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* =============================
+   ABOUT / CONTACT / OTHER SECTIONS
+============================= */
+.section {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+
+  h1 {
+    color: $color-text-main;
+    margin-bottom: 15px;
+  }
+
+  p {
+    color: $color-text-sub;
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+}
+
+/* =============================
+   CONTACT FORM
+============================= */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+
+  input,
+  textarea {
+    background: $color-background-mid;
+    border: 1px solid $color-background-light;
+    border-radius: 8px;
+    padding: 12px;
+    color: $color-text-main;
+  }
+
+  button {
+    background: $color-primary;
+    border: none;
+    color: $color-text-main;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover {
+      background: $color-secondary;
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* =============================
+   CART PAGE
+============================= */
+#cart-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: $color-background-mid;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  text-align: left;
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 12px 0;
+    border-bottom: 1px solid $color-background-light;
+    padding-bottom: 8px;
+    color: $color-text-sub;
+  }
+
+  p strong {
+    color: $color-text-main;
+    font-size: 1.2rem;
+  }
+
+  button {
+    margin-top: 20px;
+    background: $color-primary;
+    border: none;
+    color: $color-text-main;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+
+    &:hover {
+      background: $color-secondary;
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* =============================
+   FOOTER
+============================= */
+footer {
+  background: $color-background-mid;
+  color: $color-text-sub;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  border-top: 1px solid $color-background-light;
+}
+
+/* =============================
+   PRODUCT DETAIL VIEW
+============================= */
+.product-detail-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+
+  .detail-img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .detail-info {
+    flex: 1;
+    min-width: 300px;
+
+    h1 {
+      font-size: 2.5rem;
+      color: $color-text-main;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      color: $color-primary;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .btn-large {
+      background: $color-primary;
+      color: $color-text-main;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+
+      &:hover {
+        background: $color-secondary;
+        transform: scale(1.05);
+      }
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: $color-text-sub;
+      text-decoration: none;
+
+      &:hover {
+        color: $color-text-main;
+      }
+    }
+  }
+}
+
+/* =============================
+   CHECKOUT MODAL
+============================= */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    background-color: #1a1a1a; // Slight variation from background-mid
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba($color-primary, 0.4);
+    animation: fadeIn 0.3s;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: $color-text-sub;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-text-main;
+    }
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: $color-primary;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+  }
+}
+
+
+/* =============================
+   ADMIN PANEL STYLES
+============================= */
+.admin-container {
+  max-width: 800px; 
+  margin: 40px auto;
+  background: $color-background-mid;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+
+  h1, h2 {
+    color: $color-primary;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .form-group input, 
+  .form-group textarea {
+    background: $color-background-light; 
+    border: 1px solid #333;
+  }
+
+  .btn-admin {
+    background: $color-primary;
+
+    &:hover {
+      background: $color-secondary;
+    }
+  }
+  
+  /* List Container Styles */
+  .list-item {
+    background: #1a1a1a;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-left: 4px solid $color-background-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &.order { border-left-color: $color-success; }
+    &.msg { border-left-color: $color-primary; }
+
+    .btn-delete {
+      background: $color-error;
+
+      &:hover {
+        background: #dc2626;
+      }
+    }
+
+    .btn-edit {
+      background: $color-warning;
+    }
+  }
+}

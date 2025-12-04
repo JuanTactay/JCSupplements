@@ -33,19 +33,14 @@ async function initDB() {
 }
 initDB();
 
-// ===============================================
-// 1. CRITICAL MIDDLEWARE (MUST BE AT THE TOP)
-// ===============================================
-// Enables cookie reading BEFORE any route attempts to access them
+
 app.use(cookieParser()); 
 // Enables body parsing (reading JSON from requests)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// ===============================================
-// 2. PROTECTED ROUTE (MUST BE DEFINED AFTER COOKIEPARSER)
-// ===============================================
+
 app.get('/admin.html', (req, res) => {
   // This check now works because cookieParser has initialized req.cookies
   if (req.cookies.admin_token === ADMIN_PASSWORD) {
