@@ -81,6 +81,31 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
+// DELETE: Remove a product (SECURED)
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    // 1. Security Check
+    const providedPassword = req.headers['x-api-key'];
+    if (providedPassword !== ADMIN_PASSWORD) {
+      return res.status(403).json({ error: "⛔ Access Denied" });
+    }
+
+    const id = req.params.id;
+    
+    // 2. Execute Delete
+    const result = await db.run('DELETE FROM products WHERE id = ?', id);
+
+    if (result.changes > 0) {
+      res.json({ success: true, message: "Product deleted" });
+    } else {
+      res.status(404).json({ error: "Product not found" });
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // POST: Handle Contact Form
 app.post('/api/contact', (req, res) => {
   const { name, email, message } = req.body;
