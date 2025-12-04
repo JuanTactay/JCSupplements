@@ -381,3 +381,69 @@ footer {
   margin-top: 40px;
   border-top: 1px solid #222;
 }
+
+/* =============================
+   PRODUCT DETAIL VIEW
+============================= */
+.product-detail-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.detail-img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.detail-info h1 {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.detail-info .price {
+  color: #e63946;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.btn-large {
+  background: #e63946;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.2s;
+}
+
+.btn-large:hover {
+  background: #ff4757;
+  transform: scale(1.05);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #ccc;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: white;
+}
