@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | JCSupplements</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Specific styles for the Admin Panel */
+    .admin-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #111;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    
+    .admin-container h1 {
+      color: #e63946;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+
+    .form-group input, 
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+    }
+
+    .btn-admin {
+      width: 100%;
+      background: #e63946;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .btn-admin:hover {
+      background: #ff4757;
+    }
+
+    #status-msg {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🔒 Admin Panel</div>
+    <nav>
+      <a href="index.html">← Back to Site</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="admin-container fade-in">
+      <h1>Add New Product</h1>
+      <form id="add-product-form">
+        
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="p-name" placeholder="e.g. Omega Fish Oil" required>
+        </div>
+
+        <div class="form-group">
+          <label>Price ($)</label>
+          <input type="number" id="p-price" step="0.01" placeholder="24.99" required>
+        </div>
+
+        <div class="form-group">
+          <label>Image Path (Use 'assets/protein.webp' for now)</label>
+          <input type="text" id="p-img" value="assets/protein.webp" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="p-desc" rows="4" placeholder="Product details..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-admin">Save Product</button>
+      </form>
+      <p id="status-msg"></p>
+    </div>
+  </main>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
