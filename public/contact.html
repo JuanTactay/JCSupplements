@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | JCSupplements</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">💪 JCSupplements</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section fade-in">
+        <h1>Contact Us</h1>
+        <p>Need help or have questions? Reach out below.</p>
+
+        <form id="contact-form">
+          <input type="text" id="name" placeholder="Your Name" required />
+          <input type="email" id="email" placeholder="Email" required />
+          <textarea
+            id="message"
+            placeholder="Your Message"
+            rows="5"
+            required
+          ></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+
+        <p id="form-message"></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2025 JCSupplements. All rights reserved.</p>
+    </footer>
+
+    <script src="js/validate.js"></script>
+  </body>
+</html>
