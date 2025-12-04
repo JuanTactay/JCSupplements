@@ -1,128 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | JCSupplements</title>
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* Admin Layout */
-    .admin-container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #111;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | JCSupplements</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Admin Layout */
+      .admin-container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #111;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-    .tab-btn {
-      background: none; border: none; color: #777; font-size: 1.2rem; cursor: pointer; padding: 10px 20px; font-weight: bold;
-    }
-    .tab-btn.active { color: #e63946; border-bottom: 3px solid #e63946; }
-    .tab-section { display: none; animation: fadeIn 0.4s; }
-    .tab-section.active { display: block; }
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        color: #777;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 10px 20px;
+        font-weight: bold;
+      }
+      .tab-btn.active {
+        color: #e63946;
+        border-bottom: 3px solid #e63946;
+      }
+      .tab-section {
+        display: none;
+        animation: fadeIn 0.4s;
+      }
+      .tab-section.active {
+        display: block;
+      }
 
-    /* Forms & Lists */
-    .form-group { margin-bottom: 15px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 5px; color: #ccc; }
-    .form-group input, .form-group textarea {
-      width: 100%; padding: 10px; background: #222; border: 1px solid #333;
-      border-radius: 6px; color: white;
-    }
-    .btn-admin { width: 100%; background: #e63946; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    .btn-admin:hover { background: #ff4757; }
+      /* Forms & Lists */
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #ccc;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        background: #222;
+        border: 1px solid #333;
+        border-radius: 6px;
+        color: white;
+      }
+      .btn-admin {
+        width: 100%;
+        background: #e63946;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .btn-admin:hover {
+        background: #ff4757;
+      }
 
-    /* Lists (Products, Orders, Messages) */
-    .list-item {
-      background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 6px;
-      border-left: 4px solid #333; display: flex; justify-content: space-between; align-items: center;
-    }
-    .list-item.order { border-left-color: #06d6a0; }
-    .list-item.msg { border-left-color: #3a86ff; }
-    
-    .item-info strong { color: #fff; font-size: 1.1rem; }
-    .item-sub { color: #aaa; font-size: 0.9rem; margin-top: 4px; }
-    
-    .btn-delete { background: #b91c1c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-    .thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 15px; vertical-align: middle; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo">🔒 Command Center</div>
-    <nav>
-      <a href="index.html">← Back to Site</a>
-      <button onclick="logout()" style="background:none; border:none; color:#ccc; cursor:pointer;">Logout</button>
-    </nav>
-  </header>
+      /* Lists (Products, Orders, Messages) */
+      .list-item {
+        background: #1a1a1a;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        border-left: 4px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .list-item.order {
+        border-left-color: #06d6a0;
+      }
+      .list-item.msg {
+        border-left-color: #3a86ff;
+      }
 
-  <main>
-    <div class="admin-container fade-in">
-      
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('products')">Inventory</button>
-        <button class="tab-btn" onclick="switchTab('orders')">Orders</button>
-        <button class="tab-btn" onclick="switchTab('messages')">Inbox</button>
+      .item-info strong {
+        color: #fff;
+        font-size: 1.1rem;
+      }
+      .item-sub {
+        color: #aaa;
+        font-size: 0.9rem;
+        margin-top: 4px;
+      }
+
+      .btn-delete {
+        background: #b91c1c;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .thumb {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-right: 15px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">🔒 Command Center</div>
+      <nav>
+        <a href="index.html">← Back to Site</a>
+        <button
+          onclick="logout()"
+          style="background: none; border: none; color: #ccc; cursor: pointer"
+        >
+          Logout
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="admin-container fade-in">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('products')">
+            Inventory
+          </button>
+          <button class="tab-btn" onclick="switchTab('orders')">Orders</button>
+          <button class="tab-btn" onclick="switchTab('messages')">Inbox</button>
+        </div>
+
+        <div id="section-products" class="tab-section active">
+          <h2>Add / Edit Product</h2>
+          <form id="add-product-form">
+            <input type="hidden" id="p-id" />
+            <div class="form-group">
+              <label>Product Name</label>
+              <input type="text" id="p-name" required />
+            </div>
+            <div class="form-group">
+              <label>Price (₱)</label>
+              <input type="number" id="p-price" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label>Product Image</label>
+
+              <input
+                type="file"
+                id="file-upload"
+                accept="image/*"
+                style="margin-bottom: 10px"
+              />
+
+              <input
+                type="text"
+                id="p-img"
+                readonly
+                style="background: #333; color: #777; cursor: not-allowed"
+              />
+
+              <img
+                id="preview-img"
+                src=""
+                style="
+                  max-width: 100px;
+                  margin-top: 10px;
+                  display: none;
+                  border-radius: 6px;
+                  border: 1px solid #444;
+                "
+              />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="p-desc" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn-admin">Save Product</button>
+            <button
+              type="button"
+              id="btn-cancel"
+              class="btn-admin"
+              style="background: #555; margin-top: 10px; display: none"
+            >
+              Cancel Edit
+            </button>
+          </form>
+          <p id="status-msg"></p>
+
+          <h3 style="margin-top: 30px; color: #ccc">Current Inventory</h3>
+          <div id="product-list">Loading...</div>
+        </div>
+
+        <div id="section-orders" class="tab-section">
+          <h2>Customer Orders</h2>
+          <div id="order-list">Loading orders...</div>
+        </div>
+
+        <div id="section-messages" class="tab-section">
+          <h2>Contact Messages</h2>
+          <div id="message-list">Loading messages...</div>
+        </div>
       </div>
+    </main>
 
-      <div id="section-products" class="tab-section active">
-        <h2>Add / Edit Product</h2>
-        <form id="add-product-form">
-          <input type="hidden" id="p-id">
-          <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" id="p-name" required>
-          </div>
-          <div class="form-group">
-            <label>Price (₱)</label>
-            <input type="number" id="p-price" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label>Image Path (e.g. assets/protein.webp)</label>
-            <input type="text" id="p-img" required>
-          </div>
-          <div class="form-group">
-            <label>Description</label>
-            <textarea id="p-desc" rows="3" required></textarea>
-          </div>
-          <button type="submit" class="btn-admin">Save Product</button>
-          <button type="button" id="btn-cancel" class="btn-admin" style="background: #555; margin-top: 10px; display: none;">Cancel Edit</button>
-        </form>
-        <p id="status-msg"></p>
+    <script src="js/admin.js"></script>
+    <script>
+      function logout() {
+        localStorage.removeItem("adminKey");
+        window.location.href = "login.html";
+      }
 
-        <h3 style="margin-top: 30px; color: #ccc;">Current Inventory</h3>
-        <div id="product-list">Loading...</div>
-      </div>
+      function switchTab(tabName) {
+        // Hide all sections
+        document
+          .querySelectorAll(".tab-section")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((el) => el.classList.remove("active"));
 
-      <div id="section-orders" class="tab-section">
-        <h2>Customer Orders</h2>
-        <div id="order-list">Loading orders...</div>
-      </div>
-
-      <div id="section-messages" class="tab-section">
-        <h2>Contact Messages</h2>
-        <div id="message-list">Loading messages...</div>
-      </div>
-
-    </div>
-  </main>
-
-  <script src="js/admin.js"></script>
-  <script>
-    function logout() { localStorage.removeItem("adminKey"); window.location.href = "login.html"; }
-    
-    function switchTab(tabName) {
-      // Hide all sections
-      document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
-      // Show selected
-      document.getElementById('section-' + tabName).classList.add('active');
-      event.target.classList.add('active');
-    }
-  </script>
-</body>
+        // Show selected
+        document.getElementById("section-" + tabName).classList.add("active");
+        event.target.classList.add("active");
+      }
+    </script>
+  </body>
 </html>

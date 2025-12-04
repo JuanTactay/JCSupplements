@@ -1,5 +1,42 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // === CONFIG & SELECTORS ===
+  // === AUTO-UPLOAD LOGIC ===
+const fileInput = document.getElementById("file-upload");
+const imgInput = document.getElementById("p-img");
+const preview = document.getElementById("preview-img");
+
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  statusMsg.textContent = "⏳ Uploading image...";
+
+  try {
+    const res = await fetch('/api/upload', {
+      method: "POST",
+      body: formData // No headers needed, browser handles it
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // Fill the text box automatically!
+      imgInput.value = data.filePath;
+
+      // Show preview
+      preview.src = data.filePath;
+      preview.style.display = "block";
+
+      statusMsg.textContent = "✅ Image uploaded!";
+    }
+  } catch (err) {
+    console.error(err);
+    statusMsg.textContent = "❌ Upload failed";
+  }
+});
+
+    // === CONFIG & SELECTORS ===
   const form = document.getElementById("add-product-form");
   const statusMsg = document.getElementById("status-msg");
   
@@ -104,6 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
     pName.value = p.name;
     pPrice.value = p.price;
     pImg.value = p.img;
+    preview.src = p.img;
+    preview.style.display = "block";
     pDesc.value = p.description;
     submitBtn.textContent = "Update";
     cancelBtn.style.display = "block";
@@ -115,6 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
     pId.value = "";
     submitBtn.textContent = "Save Product";
     cancelBtn.style.display = "none";
+    preview.style.display = "none";
+    fileInput.value = ""; // Clear file picker
   }
   
   cancelBtn.addEventListener("click", resetForm);

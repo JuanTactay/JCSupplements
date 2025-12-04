@@ -2,12 +2,23 @@ const express = require('express');
 const path = require('path');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const multer = require('multer'); // <--- IMPORT MULTER
 
 const app = express();
 const PORT = 3000;
 
 // === SECURITY CONFIG ===
 const ADMIN_PASSWORD = "admin"; 
+
+// === FILE UPLOAD CONFIG ===
+const storage = multer.diskStorage({
+  destination: './public/assets/',
+  filename: (req, file, cb) => {
+    // Create unique name: timestamp + original name
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
 
 // === DATABASE CONNECTION ===
 let db;
@@ -28,7 +39,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // === API ROUTES ===
 
-// 1. PRODUCTS (Public Read, Admin Write)
+// 1. IMAGE UPLOAD ROUTE (New!)
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+  res.json({ success: true, filePath: 'assets/' + req.file.filename });
+});
+
+// 2. PRODUCTS
 app.get('/api/products', async (req, res) => {
   try {
     const products = await db.all('SELECT * FROM products');
@@ -46,7 +63,6 @@ app.get('/api/products/:id', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });
-  
   try {
     const { name, price, img, description } = req.body;
     const result = await db.run(
@@ -59,7 +75,6 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });
-
   try {
     const { name, price, img, description } = req.body;
     await db.run(
@@ -72,14 +87,13 @@ app.put('/api/products/:id', async (req, res) => {
 
 app.delete('/api/products/:id', async (req, res) => {
   if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });
-
   try {
     await db.run('DELETE FROM products WHERE id = ?', req.params.id);
     res.json({ success: true });
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// 2. CONTACT MESSAGES (Public Write, Admin Read)
+// 3. CONTACT MESSAGES
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, message } = req.body;
@@ -100,10 +114,9 @@ app.get('/api/messages', async (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// 3. ORDERS (Public Write, Admin Read)
+// 4. ORDERS
 app.post('/api/orders', async (req, res) => {
   try {
-    // Extract new fields
     const { customer_name, contact_number, address, city, total, items } = req.body;
     const date = new Date().toLocaleString();
     const itemsString = JSON.stringify(items);
@@ -124,7 +137,7 @@ app.get('/api/orders', async (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// 4. LOGIN
+// 5. LOGIN
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
   if (password === ADMIN_PASSWORD) res.json({ success: true });
