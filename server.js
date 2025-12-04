@@ -41,14 +41,15 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-app.get('/admin.html', (req, res) => {
-  
+// === PROTECTED ADMIN PAGE (DYNAMIC ROUTE FIX) ===
+app.get('/dashboard', (req, res) => { // CHANGED TO /dashboard
+  // Check if the "admin_token" cookie matches our password
   if (req.cookies.admin_token === ADMIN_PASSWORD) {
     res.sendFile(path.join(__dirname, 'private', 'admin.html'));
   } else {
     res.redirect('/login.html');
   }
-});
+}); 
 
 
 app.use(express.static(path.join(__dirname, 'public')));

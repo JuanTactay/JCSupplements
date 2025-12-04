@@ -22,9 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.success) {
-          // 2. If Server says YES: Save key and go to Admin
+          // 2. If Server says YES: Set cookie and go to Admin DASHBOARD
           localStorage.setItem("adminKey", password);
-          window.location.href = "admin.html";
+          // CHANGE THIS LINE:
+          window.location.href = "dashboard"; 
         } else {
           // 3. If Server says NO: Show error
           if(errorMsg) errorMsg.style.display = "block";
