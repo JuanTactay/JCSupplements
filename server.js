@@ -135,6 +135,15 @@ app.delete('/api/messages/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
+// GET ALL ORDERS (Admin Only) - MISSING PART
+app.get('/api/orders', async (req, res) => {
+  if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });
+  try {
+    const orders = await db.all('SELECT * FROM orders ORDER BY id DESC');
+    res.json(orders);
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
 // 4. ORDERS (Modified for Xendit)
 app.post('/api/orders', async (req, res) => {
   try {
@@ -167,7 +176,7 @@ app.post('/api/orders', async (req, res) => {
             amount: total,
             payer_email: "customer@example.com", // You could ask for this in the form too
             description: `JCSupplements Order #${orderId}`,
-            success_redirect_url: `https://jcsupplements.onrender.com/success.html?id=${orderId}`, // Where to go after payment
+            success_redirect_url: `https://jcsupplements.onrender.com/success.html?id=${orderId}`,
             failure_redirect_url: `https://jcsupplements.onrender.com/shop.html`
         }
     });
