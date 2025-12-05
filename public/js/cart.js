@@ -138,16 +138,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.success) {
-          // SHOW ORDER ID IN ALERT
-          alert("✅ Order Placed Successfully!\n\nYOUR ORDER ID IS: " + result.orderId + "\n\nPlease save this ID to track your order status.");
-          
+          // Clear cart immediately
           saveCart([]); 
           closeModal();
           updateCartCount();
           renderCart();
-          
-          // Optional: Redirect straight to tracking
-          window.location.href = "track.html";
+
+          // REDIRECT TO XENDIT
+          // The server sent us a special URL (paymentUrl)
+          window.location.href = result.paymentUrl;
         }
       } catch (err) {
         alert("Server error.");

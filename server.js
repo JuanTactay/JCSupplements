@@ -1,3 +1,4 @@
+const axios = require('axios');
 const express = require('express');
 const path = require('path');
 const sqlite3 = require('sqlite3');
@@ -10,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 
 // === SECURITY CONFIG ===
 const ADMIN_PASSWORD = "admin"; 
+const XENDIT_SECRET_KEY = 'xnd_development_r3Vs0NOnZbo8C7BOdK2FT50rhTzJpK06b9fp1TjyyzXHVUhtRs50z4IRwNg8gT'
 
 // === FILE UPLOAD CONFIG ===
 const storage = multer.diskStorage({
@@ -133,30 +135,55 @@ app.delete('/api/messages/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-// --- ORDERS ---
+// 4. ORDERS (Modified for Xendit)
 app.post('/api/orders', async (req, res) => {
   try {
     const { customer_name, contact_number, address, city, total, items } = req.body;
     const date = new Date().toLocaleString();
     const itemsString = JSON.stringify(items);
+    
+    // 1. Save Order to Database first (Status: Pending)
     await db.run(
-      'INSERT INTO orders (customer_name, contact_number, address, city, total, items, status, last_updated, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [customer_name, contact_number, address, city, total, itemsString, 'Pending', date, date]
+      'INSERT INTO orders (customer_name, contact_number, address, city, total, items, status, payment_status, last_updated, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [customer_name, contact_number, address, city, total, itemsString, 'Pending', 'Unpaid', date, date]
     );
-    // Return the ID so we can show it to the user for tracking!
+    
+    // Get the Order ID
     const result = await db.get('SELECT last_insert_rowid() as id');
-    res.json({ success: true, orderId: result.id });
-  } catch (error) { res.status(500).json({ error: error.message }); }
-});
+    const orderId = result.id;
 
-app.get('/api/orders', async (req, res) => {
-  if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });
-  try {
-    const orders = await db.all('SELECT * FROM orders ORDER BY id DESC');
-    res.json(orders);
-  } catch (error) { res.status(500).json({ error: error.message }); }
-});
+    // 2. Create Xendit Invoice
+    // We send a request to Xendit's servers
+    const xenditResponse = await axios({
+        method: 'POST',
+        url: 'https://api.xendit.co/v2/invoices',
+        headers: {
+            'Content-Type': 'application/json',
+            // Basic Auth requires the key to be encoded
+            'Authorization': 'Basic ' + Buffer.from(XENDIT_SECRET_KEY + ':').toString('base64')
+        },
+        data: {
+            external_id: `ORDER-${orderId}`, // Unique Ref ID
+            amount: total,
+            payer_email: "customer@example.com", // You could ask for this in the form too
+            description: `JCSupplements Order #${orderId}`,
+            success_redirect_url: `https://jcsupplements.onrender.com/success.html?id=${orderId}`, // Where to go after payment
+            failure_redirect_url: `https://jcsupplements.onrender.com/shop.html`
+        }
+    });
 
+    // 3. Send the Xendit URL back to the frontend
+    res.json({ 
+        success: true, 
+        orderId: orderId, 
+        paymentUrl: xenditResponse.data.invoice_url 
+    });
+
+  } catch (error) { 
+      console.error(error.response ? error.response.data : error.message);
+      res.status(500).json({ error: "Payment creation failed" }); 
+  }
+});
 // NEW: Update Order Status Route
 app.put('/api/orders/:id', async (req, res) => {
   if (req.headers['x-api-key'] !== ADMIN_PASSWORD) return res.status(403).json({ error: "⛔ Access Denied" });

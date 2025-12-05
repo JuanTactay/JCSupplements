@@ -7,7 +7,7 @@ async function setup() {
     driver: sqlite3.Database
   });
 
-  // 1. Create PRODUCTS table
+  // Create Products Table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,7 +18,7 @@ async function setup() {
     )
   `);
 
-  // 2. Create MESSAGES table
+  // Create Messages Table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +29,7 @@ async function setup() {
     )
   `);
 
-  // 3. Create ORDERS table (UPDATED with status)
+  // Create Orders Table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,15 +40,18 @@ async function setup() {
       total REAL,
       items TEXT,
       status TEXT DEFAULT 'Pending',
+      payment_status TEXT DEFAULT 'Unpaid',
+      payment_method TEXT,
       last_updated TEXT,
       date TEXT
     )
   `);
 
-  // 4. Seed Products (Only if empty)
   const existing = await db.all('SELECT * FROM products');
+  
   if (existing.length === 0) {
     console.log('🌱 Seeding database...');
+    // Note: 'Whey S''mores' uses two single quotes to escape the apostrophe. This is correct SQL.
     await db.exec(`
       INSERT INTO products (name, price, img, description) VALUES
       ('Feral Pre-Workout', 2299, 'assets/preworkout.webp', 'Explosive energy and focus. Feral Pre-Workout is designed to help you crush your limits with 300mg of caffeine and beta-alanine for endurance.'),
