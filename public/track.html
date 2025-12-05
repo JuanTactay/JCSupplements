@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order | JCSupplements</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .track-container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #111;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .track-input {
+      width: 70%;
+      padding: 12px;
+      margin-right: 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #222;
+      color: white;
+    }
+    .status-box {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      display: none; /* Hidden by default */
+      text-align: left;
+      border-left: 5px solid #e63946;
+    }
+    .status-active { color: #06d6a0; font-weight: bold; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">💪 JCSupplements</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+      <a href="track.html">Track Order</a>  
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <h1>Track Your Order</h1>
+      <p>Enter your Order ID below to see the current status.</p>
+      
+      <div class="track-container fade-in">
+        <form id="track-form" style="flex-direction: row; justify-content: center;">
+          <input type="number" id="order-id" class="track-input" placeholder="e.g. 1" required>
+          <button type="submit" class="btn">Track</button>
+        </form>
+
+        <div id="result-box" class="status-box">
+          </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 JCSupplements. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/tracking.js"></script>
+</body>
+</html>

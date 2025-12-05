@@ -138,13 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.success) {
-          alert("✅ Order Placed! We will ship to " + orderData.city);
+          // SHOW ORDER ID IN ALERT
+          alert("✅ Order Placed Successfully!\n\nYOUR ORDER ID IS: " + result.orderId + "\n\nPlease save this ID to track your order status.");
+          
           saveCart([]); 
           closeModal();
           updateCartCount();
           renderCart();
-        } else {
-          alert("❌ Failed to place order.");
+          
+          // Optional: Redirect straight to tracking
+          window.location.href = "track.html";
         }
       } catch (err) {
         alert("Server error.");

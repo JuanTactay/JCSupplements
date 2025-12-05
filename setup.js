@@ -18,7 +18,7 @@ async function setup() {
     )
   `);
 
-  // 2. Create MESSAGES table (New!)
+  // 2. Create MESSAGES table
   await db.exec(`
     CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,8 +29,7 @@ async function setup() {
     )
   `);
 
-  // 3. Create ORDERS table (New!)
-  // 3. Create ORDERS table (Updated)
+  // 3. Create ORDERS table (UPDATED with status)
   await db.exec(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,9 +39,12 @@ async function setup() {
       city TEXT,
       total REAL,
       items TEXT,
+      status TEXT DEFAULT 'Pending',
+      last_updated TEXT,
       date TEXT
     )
   `);
+
   // 4. Seed Products (Only if empty)
   const existing = await db.all('SELECT * FROM products');
   if (existing.length === 0) {

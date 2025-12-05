@@ -1,42 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // === AUTO-UPLOAD LOGIC ===
-const fileInput = document.getElementById("file-upload");
-const imgInput = document.getElementById("p-img");
-const preview = document.getElementById("preview-img");
-
-fileInput.addEventListener("change", async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("image", file);
-
-  statusMsg.textContent = "⏳ Uploading image...";
-
-  try {
-    const res = await fetch('/api/upload', {
-      method: "POST",
-      body: formData // No headers needed, browser handles it
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      // Fill the text box automatically!
-      imgInput.value = data.filePath;
-
-      // Show preview
-      preview.src = data.filePath;
-      preview.style.display = "block";
-
-      statusMsg.textContent = "✅ Image uploaded!";
-    }
-  } catch (err) {
-    console.error(err);
-    statusMsg.textContent = "❌ Upload failed";
-  }
-});
-
-    // === CONFIG & SELECTORS ===
+  // === CONFIG & SELECTORS ===
   const form = document.getElementById("add-product-form");
   const statusMsg = document.getElementById("status-msg");
   
@@ -94,7 +57,6 @@ fileInput.addEventListener("change", async () => {
     } catch (err) { console.error(err); }
   }
 
-  // Handle Form Submit (Add/Edit)
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const isEdit = pId.value !== "";
@@ -131,7 +93,7 @@ fileInput.addEventListener("change", async () => {
   });
 
   window.deleteProduct = async (id) => {
-    if(!confirm("Delete this?")) return;
+    if(!confirm("Delete this product?")) return;
     await fetch(`/api/products/${id}`, { method: "DELETE", headers: { "x-api-key": key } });
     loadProducts();
   };
@@ -141,12 +103,14 @@ fileInput.addEventListener("change", async () => {
     pName.value = p.name;
     pPrice.value = p.price;
     pImg.value = p.img;
-    preview.src = p.img;
-    preview.style.display = "block";
     pDesc.value = p.description;
     submitBtn.textContent = "Update";
     cancelBtn.style.display = "block";
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Update preview if using image upload
+    const preview = document.getElementById("preview-img");
+    if(preview) { preview.src = p.img; preview.style.display = "block"; }
   };
 
   function resetForm() {
@@ -154,15 +118,36 @@ fileInput.addEventListener("change", async () => {
     pId.value = "";
     submitBtn.textContent = "Save Product";
     cancelBtn.style.display = "none";
-    preview.style.display = "none";
-    fileInput.value = ""; // Clear file picker
+    const preview = document.getElementById("preview-img");
+    if(preview) preview.style.display = "none";
   }
-  
   cancelBtn.addEventListener("click", resetForm);
+
+  // === IMAGE UPLOAD LOGIC ===
+  const fileInput = document.getElementById("file-upload");
+  if(fileInput) {
+      fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append("image", file);
+      statusMsg.textContent = "⏳ Uploading image...";
+      try {
+        const res = await fetch('/api/upload', { method: "POST", body: formData });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById("p-img").value = data.filePath;
+          const preview = document.getElementById("preview-img");
+          if(preview) { preview.src = data.filePath; preview.style.display = "block"; }
+          statusMsg.textContent = "✅ Image uploaded!";
+        }
+      } catch (err) { statusMsg.textContent = "❌ Upload failed"; }
+    });
+  }
 
 
   // ==========================================
-  // SECTION B: ORDERS LOGIC
+  // SECTION B: ORDERS LOGIC (UPDATED)
   // ==========================================
   async function loadOrders() {
     try {
@@ -178,6 +163,17 @@ fileInput.addEventListener("change", async () => {
           itemsDisplay = items.map(i => `${i.name} (x${i.quantity})`).join(", ");
         } catch(e) { itemsDisplay = o.items; }
 
+        let statusColor = "#ccc";
+        if(o.status === "Packaged") statusColor = "#f39c12"; 
+        if(o.status === "Shipped") statusColor = "#3498db"; 
+        if(o.status === "Delivered") statusColor = "#06d6a0"; 
+
+        // CONDITIONAL BUTTON LOGIC
+        // Only show the Delete button if status is 'Delivered'
+        const deleteBtn = o.status === 'Delivered' 
+          ? `<button onclick="deleteOrder(${o.id})" style="margin-left:10px; background:#b91c1c; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;">Delete Order</button>` 
+          : '';
+
         return `
           <div class="list-item order" style="flex-direction:column; align-items:flex-start;">
             <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:10px;">
@@ -192,16 +188,53 @@ fileInput.addEventListener("change", async () => {
                 🛒 <strong>Items:</strong> ${itemsDisplay}
               </div>
             </div>
-            <div class="item-sub" style="margin-top:5px;">Date: ${o.date}</div>
+
+            <div style="margin-top:10px; width:100%; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center;">
+                    <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding:5px; background:#333; color:white; border:1px solid #555; border-radius:4px; margin-right:10px;">
+                        <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Packaged" ${o.status === 'Packaged' ? 'selected' : ''}>Packaged</option>
+                        <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                    </select>
+                    ${deleteBtn}
+                </div>
+                <div class="item-sub" style="font-size:0.8rem;">Last Update: ${o.last_updated || o.date}</div>
+            </div>
           </div>
         `;
       }).join("");
     } catch (err) { console.error(err); }
   }
 
+  // NEW: Function to Delete Order
+  window.deleteOrder = async (id) => {
+      if(!confirm("Are you sure you want to permanently delete this completed order?")) return;
+      try {
+          await fetch(`/api/orders/${id}`, { method: "DELETE", headers: { "x-api-key": key } });
+          loadOrders(); // Refresh list
+      } catch(err) { alert("Error deleting order"); }
+  };
+  // Function to Update Status
+  window.updateOrderStatus = async (id, newStatus) => {
+      try {
+          const res = await fetch(`/api/orders/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json", "x-api-key": key },
+              body: JSON.stringify({ status: newStatus })
+          });
+          if(res.ok) {
+              // Refresh list to show new color/timestamp
+              loadOrders();
+          } else {
+              alert("Failed to update status");
+          }
+      } catch(err) { console.error(err); }
+  };
+
 
   // ==========================================
-  // SECTION C: MESSAGES LOGIC
+  // SECTION C: MESSAGES LOGIC (UPDATED WITH DELETE)
   // ==========================================
   async function loadMessages() {
     try {
@@ -211,14 +244,24 @@ fileInput.addEventListener("change", async () => {
       if(data.length === 0) { messageContainer.innerHTML = "<p>Inbox empty.</p>"; return; }
 
       messageContainer.innerHTML = data.map(m => `
-        <div class="list-item msg">
+        <div class="list-item msg" style="display:flex; justify-content:space-between; align-items:flex-start;">
           <div class="item-info">
             <strong>${m.name}</strong> (${m.email})
             <div class="item-sub" style="color:white; margin-top:5px;">"${m.message}"</div>
             <div class="item-sub">Date: ${m.date}</div>
           </div>
+          <button class="btn-delete" onclick="deleteMessage(${m.id})">Delete</button>
         </div>
       `).join("");
     } catch (err) { console.error(err); }
   }
+
+  // Function to Delete Message
+  window.deleteMessage = async (id) => {
+      if(!confirm("Delete this message?")) return;
+      try {
+          await fetch(`/api/messages/${id}`, { method: "DELETE", headers: { "x-api-key": key } });
+          loadMessages();
+      } catch(err) { alert("Error deleting message"); }
+  };
 });
